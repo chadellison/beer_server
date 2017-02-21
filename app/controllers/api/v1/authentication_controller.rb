@@ -4,8 +4,6 @@ class Api::V1::AuthenticationController < ApplicationController
   def create
     user = User.find_by(email: login_params[:email])
     if user && user.authenticate(login_params[:password]) && user.approved
-      new_token = BCrypt::Password.create("password")
-      user.update(password_digest: new_token)
       respond_with user, location: nil, status: 200
     else
       error = ActiveRecord::RecordNotFound
