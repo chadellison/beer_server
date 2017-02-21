@@ -64,15 +64,28 @@ RSpec.describe Api::V1::BeersController, type: :controller do
   end
 
   describe "create" do
+    user = User.create(first_name: Faker::Name.first_name,
+                       last_name: Faker::Name.last_name,
+                       email: Faker::Internet.email,
+                       password: Faker::Internet.password)
+
     context "with a valid beer creation" do
       xit "returns the beer and a 201 status" do
       end
     end
 
+    context "witn no token" do
+      it "returns an error" do
+        params = { beer: { name: Faker::Name.name, beer_type: "ipa" } }
+
+        expect { post :create, params: params, format: :json }
+          .to raise_exception(ActiveRecord::RecordNotFound)
+      end
+    end
+
     context "with an invalid beer creation" do
       it "returns a 422 and an error message" do
-        params = { beer: { beer_type: "ipa" } }
-
+        params = { beer: { beer_type: "ipa" }, token: user.password_digest }
         post :create, params: params, format: :json
 
         expect(response.status).to eq 422
