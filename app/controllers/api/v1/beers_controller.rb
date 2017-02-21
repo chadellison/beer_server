@@ -13,6 +13,7 @@ module Api
                                           beer_type: new_beer_params[:beer_type])
 
         if beer.save
+          @user.beers << beer
           respond_with beer, location: nil
         else
           errors = { errors: beer.errors }
@@ -31,7 +32,9 @@ module Api
         end
 
         def authenticate_with_token
-          unless User.find_by(password_digest: params[:token]).present?
+          @user = User.find_by(password_digest: params[:token])
+
+          unless @user.present?
             return raise ActiveRecord::RecordNotFound
           end
         end
