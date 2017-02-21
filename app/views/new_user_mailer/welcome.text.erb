@@ -1,0 +1,8 @@
+Hi <%= @new_user.first_name %>,
+Welcome to the beer project. Click here to verify your account! <%= link_to "",
+                                 api_v1_user_url(@new_user.id),
+                                 method: :patch %>
+
+Cheers,
+
+the Beer Project staff

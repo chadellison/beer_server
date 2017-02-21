@@ -1,0 +1,29 @@
+module Api
+  module V1
+    class UsersController < ApplicationController
+      respond_to :json
+
+      def create
+        user = User.new(user_params)
+        if user.save
+          # mailer through sidekiq job
+          NewUserMailer.welcome(user).deliver_later
+          respond_with user, location: nil
+        else
+          errors = { errors: user.errors }
+          respond_with errors, location: nil, status: 404
+        end
+      end
+
+      def update
+
+      end
+
+      private
+
+      def user_params
+        params.require(:user).permit(:email, :password, :first_name, :last_name)
+      end
+    end
+  end
+end
