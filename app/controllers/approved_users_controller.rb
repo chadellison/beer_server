@@ -1,7 +1,7 @@
 class ApprovedUsersController < ActionController::Base
   def show
-    @user = User.find(params[:id])
-    # user.update(approved: true)
+    @user = User.find_by(password_digest: params[:id])
+    user.update(approved: true)
     render :show
   end
 end

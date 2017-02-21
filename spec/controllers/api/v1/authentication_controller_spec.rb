@@ -9,7 +9,8 @@ RSpec.describe Api::V1::AuthenticationController, type: :controller do
       let!(:user) { User.create(email: email,
                                 password: "password",
                                 first_name: first_name,
-                                last_name: last_name) }
+                                last_name: last_name,
+                                approved: true) }
       let(:params) { { credentials: { email: email, password: "password" } } }
 
       it "returns the user's token" do
