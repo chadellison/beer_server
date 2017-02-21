@@ -6,8 +6,9 @@ module Api
       def create
         user = User.new(user_params)
         if user.save
-          # mailer through sidekiq job
-          NewUserMailer.welcome(user).deliver_later
+          NewUserMailer.welcome(user, "#{ENV["host"]}/approved_users/#{user.id}")
+            .deliver_later
+
           respond_with user, location: nil
         else
           errors = { errors: user.errors }
