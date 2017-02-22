@@ -1,7 +1,7 @@
 module Api
   module V1
     class BeersController < ApplicationController
-      before_filter :authenticate_with_token, only: [:create]
+      before_action :authenticate_with_token, only: [:create]
       respond_to :json
 
       def index
