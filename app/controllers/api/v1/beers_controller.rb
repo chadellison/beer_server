@@ -24,7 +24,7 @@ module Api
       private
 
         def beer_params
-          params.permit(:type, :name, :text, :sort, :rating)
+          params.permit(:type, :name, :text, :sort, :rating, :my_beers, :token)
         end
 
         def new_beer_params
