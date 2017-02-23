@@ -3,6 +3,7 @@ class Beer < ApplicationRecord
   validates_uniqueness_of :name
   has_many :user_beers
   has_many :users, through: :user_beers
+  has_many :ratings
 
   class << self
     def search(params)
@@ -33,6 +34,7 @@ class Beer < ApplicationRecord
     def fetch_beer_types(params)
       beers = Beer
       beers = Beer.where(approved: true) unless params["current_beers"] == "my beers"
+
       beers.select(:beer_type)
         .distinct.pluck(:beer_type)
         .unshift("all types")

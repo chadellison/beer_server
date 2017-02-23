@@ -70,18 +70,32 @@ RSpec.describe Api::V1::BeersController, type: :controller do
                        password: Faker::Internet.password)
     }
 
-    context "with a valid beer creation" do
+    context "with a valid beer and valid user" do
       it "returns the beer and a 201 status" do
         beer_name = Faker::Name.name
-        params = { beer: { name: beer_name, beer_type: "ipa" },
+        params = { beer: { name: beer_name, beer_type: "ipa", rating: 3.4533 },
                    token: user.password_digest }
         expect { post :create, params: params, format: :json }
           .to change { Beer.count }.by(1)
-
+binding.pry
         expect(response.status).to eq 201
         expect(JSON.parse(response.body)["name"]).to eq beer_name.downcase
       end
+
+      xit "associates the user with the beer" do
+      end
+
+      context "when the user has given a rating" do
+        xit "creates a rating" do
+        end
+      end
+
+      context "when no rating is given" do
+        xit "text" do
+        end
+      end
     end
+
 
     context "witn no token" do
       it "returns an error" do

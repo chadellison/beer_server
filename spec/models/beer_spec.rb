@@ -20,6 +20,9 @@ RSpec.describe Beer, type: :model do
     expect(beer2.valid?).to be false
   end
 
+  xit "has many ratings" do
+  end
+
   it "has many users" do
     first_name = Faker::Name.first_name
     last_name = Faker::Name.last_name

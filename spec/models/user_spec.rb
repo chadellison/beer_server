@@ -16,6 +16,9 @@ RSpec.describe User, type: :model do
     expect(user.valid?).to be true
   end
 
+  xit "has many ratings" do
+  end
+
   it "validates the uniqueness of an email" do
     User.create(email: email,
                 password: password,
