@@ -64,13 +64,22 @@ RSpec.describe Api::V1::BeersController, type: :controller do
   end
 
   describe "create" do
-    user = User.create(first_name: Faker::Name.first_name,
+    let(:user) { User.create(first_name: Faker::Name.first_name,
                        last_name: Faker::Name.last_name,
                        email: Faker::Internet.email,
                        password: Faker::Internet.password)
+    }
 
     context "with a valid beer creation" do
-      xit "returns the beer and a 201 status" do
+      it "returns the beer and a 201 status" do
+        beer_name = Faker::Name.name
+        params = { beer: { name: beer_name, beer_type: "ipa" },
+                   token: user.password_digest }
+        expect { post :create, params: params, format: :json }
+          .to change { Beer.count }.by(1)
+
+        expect(response.status).to eq 201
+        expect(JSON.parse(response.body)["name"]).to eq beer_name.downcase
       end
     end
 
