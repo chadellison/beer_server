@@ -12,6 +12,7 @@ module Api
         beer = Beer.find_or_initialize_by(name: new_beer_params[:name].to_s.downcase,
                                           beer_type: new_beer_params[:beer_type])
 
+        beer.rating = new_beer_params[:rating].to_i
         if beer.save
           @user.beers << beer
           respond_with beer, location: nil

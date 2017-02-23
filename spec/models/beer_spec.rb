@@ -97,6 +97,11 @@ RSpec.describe Beer, type: :model do
     end
   end
 
+  describe "fetch_beer_types" do
+    xit "test" do
+    end
+  end
+
   describe "scope_to_user" do
     let(:email) { Faker::Internet.email }
     let(:user) {
@@ -116,6 +121,13 @@ RSpec.describe Beer, type: :model do
 
     it "scopes the beers to a user by its password_digest" do
       expect(Beer.scope_to_user(user.password_digest)).to eq user.beers
+    end
+  end
+
+  context "private" do
+    describe "scope_beers" do
+      xit "test" do
+      end
     end
   end
 end

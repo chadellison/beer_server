@@ -4,6 +4,7 @@ module Api
       respond_to :json
 
       def index
+        Beer.fetch_beer_types(params)
         beer_types = Beer.where(approved: true)
                       .select(:beer_type)
                       .distinct.pluck(:beer_type)
