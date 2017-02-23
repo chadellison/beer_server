@@ -7,8 +7,7 @@ module Api
         beer_types = Beer.where(approved: true)
                       .select(:beer_type)
                       .distinct.pluck(:beer_type)
-                      .unshift("all beers")
-
+                      .unshift("all types")
         respond_with types: beer_types
       end
     end

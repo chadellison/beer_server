@@ -7,8 +7,8 @@ class Beer < ApplicationRecord
   class << self
     def search(params)
       beers = Beer.where(approved: true)
-      beers = scope_to_user(params[:token]) if params["my_beers"].present?
-      beers = beers.where(beer_type: params["type"]) unless params["type"] == "all beers"
+      beers = scope_to_user(params[:token]) if params["current_beers"] == "my beers"
+      beers = beers.where(beer_type: params["type"]) unless ["all types", ""].include?(params["type"])
       beers = check_text(params["text"], beers) if params["text"].present?
       beers = sort_by_rating(beers, params["sort"]) unless params["sort"] == "false"
       beers = beers.limit(24)
