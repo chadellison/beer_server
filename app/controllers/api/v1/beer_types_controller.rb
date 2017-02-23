@@ -4,7 +4,7 @@ module Api
       respond_to :json
 
       def index
-        respond_with types: fetch_beer_types(params)
+        respond_with types: Beer.fetch_beer_types(params)
       end
     end
   end
