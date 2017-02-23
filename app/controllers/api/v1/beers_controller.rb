@@ -13,8 +13,7 @@ module Api
                                           beer_type: new_beer_params[:beer_type])
 
         if beer.save
-          @user.beers << beer
-          beer.ratings.create(value: new_beer_params[:rating], user_id: @user.id) if new_beer_params[:rating].present?
+          Beer.create_rating(@user, beer, new_beer_params)
           respond_with beer, location: nil
         else
           errors = { errors: beer.errors }

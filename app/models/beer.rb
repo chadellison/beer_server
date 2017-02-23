@@ -40,6 +40,13 @@ class Beer < ApplicationRecord
         .unshift("all types")
     end
 
+    def create_rating(user, beer, new_beer_params)
+      user.beers << beer
+      if new_beer_params[:rating].present?
+        beer.ratings.create(value: new_beer_params[:rating], user_id: user.id)
+      end
+    end
+
     private
 
     def scope_beers(params)
