@@ -51,7 +51,7 @@ RSpec.describe Beer, type: :model do
       end
 
       it "returns all the beers" do
-        expect(Beer.search("type" => "all beers").count).to eq 5
+        expect(Beer.search("type" => "all types").count).to eq 5
       end
     end
 

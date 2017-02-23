@@ -11,7 +11,7 @@ RSpec.describe Api::V1::BeersController, type: :controller do
           Beer.create(name: name, beer_type: type, approved: true)
         end
 
-        get :index, params: { type: "all beers" }, format: :json
+        get :index, params: { type: "all types" }, format: :json
 
         expect(response.status).to eq 200
         parsed_response = JSON.parse(response.body)
@@ -50,7 +50,7 @@ RSpec.describe Api::V1::BeersController, type: :controller do
           Beer.create(name: name, beer_type: type, approved: true)
         end
 
-        params = { type: "all beers", text: "abc"}
+        params = { type: "all types", text: "abc"}
 
         get :index, params: params, format: :json
 
