@@ -15,5 +15,10 @@ RSpec.describe Rating, type: :model do
       xit "test" do
       end
     end
+
+    describe "create_with_relationships" do
+      xit "test" do
+      end
+    end
   end
 end

@@ -40,16 +40,6 @@ class Beer < ApplicationRecord
         .unshift("all types")
     end
 
-    def create_rating(user, beer, new_rating)
-      user.beers << beer if user.beers.find_by(id: beer.id).nil?
-
-      if new_rating.present?
-        rating = beer.ratings.find_or_initialize_by(user_id: user.id)
-        rating.value = new_rating
-        rating.save
-      end
-    end
-
     private
 
     def scope_beers(params)

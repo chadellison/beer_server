@@ -12,8 +12,9 @@ module Api
         beer = Beer.find_or_initialize_by(name: beer_params[:name].to_s.downcase,
                                           beer_type: beer_params[:beer_type])
 
+        # TODO method that executes a transaction block and returns true or false
         if beer.save
-          Beer.create_rating(@user, beer, beer_params[:rating])
+          Rating.create_with_relationships(@user, beer, beer_params[:rating])
           respond_with beer, location: nil
         else
           errors = { errors: beer.errors }

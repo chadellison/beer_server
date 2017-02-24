@@ -14,4 +14,14 @@ class Rating < ApplicationRecord
     end
     beer.update(average_rating: rating)
   end
+
+  def self.create_with_relationships(user, beer, new_rating)
+    user.beers << beer if user.beers.find_by(id: beer.id).nil?
+
+    if new_rating.present?
+      rating = beer.ratings.find_or_initialize_by(user_id: user.id)
+      rating.value = new_rating
+      rating.save
+    end
+  end
 end

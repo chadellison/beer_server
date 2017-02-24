@@ -84,16 +84,41 @@ RSpec.describe Api::V1::BeersController, type: :controller do
         expect(JSON.parse(response.body)["average_rating"]).to eq "3.0"
       end
 
-      xit "associates the user with the beer" do
+      it "associates the user with the beer" do
+        beer_name = Faker::Name.name
+        params = { beer: { name: beer_name, beer_type: "ipa", rating: 3 },
+                   token: user.password_digest }
+
+        expect { post :create, params: params, format: :json }
+          .to change { user.beers.count }.by(1)
+
+        expect(user.beers.last.name).to eq beer_name.downcase
       end
 
       context "when the user has given a rating" do
-        xit "creates a rating" do
+        it "creates a rating" do
+          beer_name = Faker::Name.name
+          params = { beer: { name: beer_name, beer_type: "ipa", rating: 3 },
+                     token: user.password_digest }
+
+          expect { post :create, params: params, format: :json }
+            .to change { Rating.count }.by(1)
+
+          expect(user.beers.last.ratings.last).to eq Rating.last
         end
       end
 
       context "when no rating is given" do
-        xit "text" do
+        it "no rating is created" do
+          beer_name = Faker::Name.name
+          params = { beer: { name: beer_name, beer_type: "ipa", rating: "" },
+                     token: user.password_digest }
+
+          expect { post :create, params: params, format: :json }
+            .not_to change { Rating.count }
+
+          expect(Beer.last.ratings).to eq []
+          expect(Beer.last.average_rating).to be_nil
         end
       end
     end

@@ -63,19 +63,34 @@ RSpec.describe Api::V1::RatingsController, type: :controller do
         end
       end
 
-      context "when the params have 'all beers'" do
-        xit "adds the beer to the user's profile if the beer does not already belong to the user" do
+      context "when the user rates a new beer" do
+        it "adds the beer to the user's profile if the beer does not already belong to the user" do
+          name = Faker::Name.name
+          global_beer = Beer.create(name: name, beer_type: "ipa")
+
+          params = { rating: 4, beer_id: global_beer.id,
+                     token: user.password_digest }
+
+          expect { post :create, params: params, format: :json }
+            .to change { Rating.count &&
+                         global_beer.users.count &&
+                         user.beers.count }.by(1)
+
+          expect(response.status).to eq 201
+          expect(user.beers.last).to eq global_beer
         end
       end
     end
 
-    context "with invalid data" do
-      xit "test" do
-      end
-    end
-
     context "when the the user is not logged in" do
-      xit "tells the user to login or create an account" do
+      it "tells the user to login or create an account" do
+        name = Faker::Name.name
+        global_beer = Beer.create(name: name, beer_type: "ipa")
+
+        params = { rating: 4, beer_id: global_beer.id, token: "" }
+
+        expect { post :create, params: params, format: :json }
+          .to raise_exception ActiveRecord::RecordNotFound
       end
     end
   end
