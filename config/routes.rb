@@ -8,5 +8,5 @@ Rails.application.routes.draw do
     end
   end
 
-  get "approved_users/:token", to: "approved_users#show"
+  get "approved_users", to: "approved_users#show"
 end
