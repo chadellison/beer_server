@@ -9,8 +9,8 @@ module Api
       end
 
       def create
-        beer = Beer.find_or_initialize_by(name: beer_params[:name].to_s.downcase,
-                                          beer_type: beer_params[:beer_type])
+        beer = Beer.find_or_initialize_by(name: beer_params[:name].downcase,
+                                          beer_type: beer_params[:beer_type].downcase)
 
         if beer.save
           Rating.create_with_relationships(@user, beer, beer_params[:rating])
