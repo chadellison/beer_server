@@ -1,6 +1,6 @@
 module Api
   module V1
-    class BeerTypesController < ApplicationController
+    class BeerTypesController < Api::V1::BaseController
       respond_to :json
 
       def index

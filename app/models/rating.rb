@@ -12,6 +12,6 @@ class Rating < ApplicationRecord
     else
       rating = value
     end
-    beer.update(rating: rating)
+    beer.update(average_rating: rating)
   end
 end

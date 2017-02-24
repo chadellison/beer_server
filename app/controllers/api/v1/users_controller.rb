@@ -1,6 +1,6 @@
 module Api
   module V1
-    class UsersController < ApplicationController
+    class UsersController < Api::V1::BaseController
       respond_to :json
 
       def create

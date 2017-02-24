@@ -67,7 +67,8 @@ RSpec.describe Api::V1::BeersController, type: :controller do
     let(:user) { User.create(first_name: Faker::Name.first_name,
                        last_name: Faker::Name.last_name,
                        email: Faker::Internet.email,
-                       password: Faker::Internet.password)
+                       password: Faker::Internet.password,
+                       approved: true)
     }
 
     context "with a valid beer and valid user" do
@@ -80,7 +81,7 @@ RSpec.describe Api::V1::BeersController, type: :controller do
 
         expect(response.status).to eq 201
         expect(JSON.parse(response.body)["name"]).to eq beer_name.downcase
-        expect(JSON.parse(response.body)["rating"]).to eq "3.0"
+        expect(JSON.parse(response.body)["average_rating"]).to eq "3.0"
       end
 
       xit "associates the user with the beer" do
