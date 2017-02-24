@@ -42,12 +42,12 @@ class Beer < ApplicationRecord
 
     private
 
-    def scope_beers(params)
-      if params["current_beers"] == "my beers"
-        scope_to_user(params[:token])
-      else
-        Beer.where(approved: true)
+      def scope_beers(params)
+        if params["current_beers"] == "my beers"
+          scope_to_user(params[:token])
+        else
+          Beer.where(approved: true)
+        end
       end
-    end
   end
 end
