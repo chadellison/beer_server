@@ -11,7 +11,7 @@ class Beer < ApplicationRecord
       beers = beers.where(beer_type: params["type"]) unless ["all types", ""].include?(params["type"])
       beers = check_text(params["text"], beers) if params["text"].present?
       beers = sort_by_rating(beers, params["sort"]) unless params["sort"] == "false"
-      beers = beers.limit(24)
+      beers = beers.order(updated_at: :desc).limit(24)
       beers
     end
 

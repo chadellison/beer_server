@@ -7,7 +7,7 @@ module Api
       def create
         beer = Beer.find(params[:beer_id])
         Rating.create_with_relationships(@user, beer, params[:rating])
-        
+
         respond_with beer, location: nil
       end
     end

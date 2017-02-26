@@ -5,7 +5,7 @@ RSpec.describe Api::V1::BeersController, type: :controller do
     let(:type) { Faker::Name.name.downcase }
 
     context "when 'all beers' is in the params" do
-      it "returns the beers" do
+      it "returns all the beers in reverse order" do
         5.times do
           name = Faker::Name.name.downcase
           Beer.create(name: name, beer_type: type, approved: true)
@@ -16,7 +16,7 @@ RSpec.describe Api::V1::BeersController, type: :controller do
         expect(response.status).to eq 200
         parsed_response = JSON.parse(response.body)
         expect(parsed_response["beers"].count).to eq 5
-        expect(parsed_response["beers"].first["name"]).to eq Beer.first.name
+        expect(parsed_response["beers"].first["name"]).to eq Beer.last.name
         expect(parsed_response["beers"].third["beer_type"]).to eq Beer.third.beer_type
       end
     end
