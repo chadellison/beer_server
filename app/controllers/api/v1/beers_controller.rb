@@ -24,7 +24,8 @@ module Api
       private
 
         def search_params
-          params.permit(:type, :name, :text, :sort, :rating, :current_beers, :token)
+          params.permit(:type, :name, :text, :sort, :rating, :current_beers,
+                        :token, :page)
         end
 
         def beer_params

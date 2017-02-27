@@ -127,6 +127,29 @@ RSpec.describe Beer, type: :model do
     end
   end
 
+  describe "calculate_offset" do
+    context "when page two is passed in" do
+      it "returns the next 24 beers starting on the 25th beer" do
+        48.times do |n|
+          if n == 24
+            name = "first beer"
+          elsif n == 47
+            name = "last beer"
+          else
+            name = n.to_s
+          end
+
+          Beer.create(name: name, beer_type: "ipa")
+        end
+        params = { page: 2 }
+        expect(Beer.calculate_offset(Beer, params).pluck(:name).first)
+          .to eq "first beer"
+        expect(Beer.calculate_offset(Beer, params).pluck(:name).last)
+          .to eq "last beer"
+      end
+    end
+  end
+
   context "private" do
     describe "scope_beers" do
       xit "test" do
