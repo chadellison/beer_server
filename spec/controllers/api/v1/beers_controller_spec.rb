@@ -109,7 +109,7 @@ RSpec.describe Api::V1::BeersController, type: :controller do
       end
 
       context "when no rating is given" do
-        it "no rating is created" do
+        it "defaults to 0" do
           beer_name = Faker::Name.name
           params = { beer: { name: beer_name, beer_type: "ipa", rating: "" },
                      token: user.password_digest }
@@ -118,7 +118,7 @@ RSpec.describe Api::V1::BeersController, type: :controller do
             .not_to change { Rating.count }
 
           expect(Beer.last.ratings).to eq []
-          expect(Beer.last.average_rating).to be_nil
+          expect(Beer.last.average_rating).to eq 0.0
         end
       end
     end
