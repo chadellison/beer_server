@@ -33,10 +33,8 @@ class Beer < ApplicationRecord
     end
 
     def fetch_beer_types(params)
-      beers = Beer
-      beers = Beer.where(approved: true) unless params["current_beers"] == "my beers"
-
-      beers.select(:beer_type)
+      scope_beers(params)
+        .select(:beer_type)
         .distinct.pluck(:beer_type)
         .unshift("all types")
     end
