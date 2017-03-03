@@ -77,18 +77,6 @@ Rails.application.configure do
   config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = false
 
-  # config.action_mailer.smtp_settings = {
-  #   openssl_verify_mode: OpenSSL::SSL::VERIFY_NONE,
-  #   ssl: true,
-  #   enable_starttls_auto: true,
-  #   address:        "",
-  #   port:           587,
-  #   domain:         "http://beer-server0123.herokuapp.com",
-  #   authentication: "login",
-  #   user_name:      ENV["email_user_name"],
-  #   password:       ENV["email_password"]
-  # }
-
   config.action_mailer.smtp_settings = {
     openssl_verify_mode: "none",
     site: ENV["host"],
