@@ -105,7 +105,7 @@ Rails.application.configure do
     config.action_mailer.smtp_settings = {
       address: "smtp.mailgun.org",
       port: 587,
-      domain: "beerproject0123mailgun.com",
+      domain: "http://beer-server0123.herokuapp.com",
       authentication: "plain",
       enable_starttls_auto: true,
       user_name: ENV["email_user_name"],
