@@ -101,6 +101,8 @@ Rails.application.configure do
     password:       ENV["email_password"]
   }
 
+  config.action_mailer.default_url_options = { host: ENV["email_host"] }
+
   if ENV["RAILS_LOG_TO_STDOUT"].present?
     logger           = ActiveSupport::Logger.new(STDOUT)
     logger.formatter = config.log_formatter
