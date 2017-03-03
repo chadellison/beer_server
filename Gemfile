@@ -8,6 +8,8 @@ gem "responders"
 gem "rack-cors"
 gem "bcrypt"
 gem "figaro"
+gem 'jquery-ui-rails'
+gem "jquery-rails"
 
 group :development, :test do
   gem "rspec-rails"
