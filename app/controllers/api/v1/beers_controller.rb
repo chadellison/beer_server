@@ -9,8 +9,7 @@ module Api
       end
 
       def create
-        beer = Beer.find_or_initialize_by(name: beer_params[:name].to_s.downcase,
-                                          beer_type: beer_params[:beer_type].to_s.downcase)
+        beer = find_or_initialize_beer
 
         if beer.save
           Rating.create_with_relationships(@user, beer, beer_params[:rating])
@@ -23,13 +22,21 @@ module Api
 
       private
 
+        def find_or_initialize_beer
+          beer = Beer.find_or_initialize_by(name: beer_params[:name].to_s.downcase,
+                                     beer_type: beer_params[:beer_type].to_s.downcase)
+
+          beer.abv = beer_params[:abv] if beer_params[:abv].present? && beer.abv.nil?
+          beer
+        end
+
         def search_params
           params.permit(:type, :name, :text, :sort, :rating, :current_beers,
                         :token, :page)
         end
 
         def beer_params
-          params.require(:beer).permit(:beer_type, :name, :rating)
+          params.require(:beer).permit(:beer_type, :name, :rating, :abv)
         end
     end
   end

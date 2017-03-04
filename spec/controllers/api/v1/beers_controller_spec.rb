@@ -144,4 +144,11 @@ RSpec.describe Api::V1::BeersController, type: :controller do
       end
     end
   end
+
+  context "private" do
+    describe "find_or_initialize_beer" do
+      xit "test" do
+      end
+    end
+  end
 end
