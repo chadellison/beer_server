@@ -73,22 +73,6 @@ Rails.application.configure do
   # require 'syslog/logger'
   # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new 'app-name')
 
-  # config.action_mailer.perform_caching = false
-  # config.action_mailer.perform_deliveries = true
-  # config.action_mailer.raise_delivery_errors = false
-  #
-  # config.action_mailer.smtp_settings = {
-  #   openssl_verify_mode: "none",
-  #   site: ENV["host"],
-  #   enable_starttls_auto: true,
-  #   address:        "smtp.gmail.com",
-  #   port:           587,
-  #   domain:         "gmail.com",
-  #   authentication: "login",
-  #   user_name:      ENV["email_user_name"],
-  #   password:       ENV["email_password"]
-  # }
-
   ActionMailer::Base.smtp_settings = {
     :address        => 'smtp.sendgrid.net',
     :port           => '587',

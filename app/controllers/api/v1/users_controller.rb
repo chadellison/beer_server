@@ -7,7 +7,7 @@ module Api
         user = User.new(user_params)
         if user.save
           url = "#{ENV["host"]}/approved_users?token=#{user.password_digest}"
-          NewUserMailer.welcome(user, url).deliver
+          NewUserMailer.welcome(user, url).deliver_later
 
           respond_with user, location: nil
         else
