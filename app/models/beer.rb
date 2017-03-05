@@ -10,7 +10,7 @@ class Beer < ApplicationRecord
       beers = scope_beers(params)
       beers = beers.where(beer_type: params["type"]) unless ["all types", ""].include?(params["type"])
       beers = check_text(params["text"], beers) if params["text"].present?
-      beers = sort_by_rating(beers, params["sort"]) unless params["sort"] == "false"
+      beers = sort_by(beers, params["sort"]) if params["sort"].present?
       beers = calculate_offset(beers, params) if params[:page].present?
       beers = beers.order(updated_at: :desc).limit(24)
       beers
@@ -24,10 +24,12 @@ class Beer < ApplicationRecord
       User.find_by(password_digest: token).beers
     end
 
-    def sort_by_rating(beers, criterion)
-      if criterion == "ascending"
-        beers.order(:average_rating)
-      else
+    def sort_by(beers, criterion)
+      if criterion == "name"
+        beers.order(:name)
+      elsif criterion == "rating"
+        beers.order(average_rating: :desc)
+      elsif criterion == "abv"
         beers.order(average_rating: :desc)
       end
     end

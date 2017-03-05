@@ -95,7 +95,7 @@ RSpec.describe Beer, type: :model do
     end
   end
 
-  describe "sort_by_rating" do
+  describe "sort_by" do
     xit "test" do
     end
   end
