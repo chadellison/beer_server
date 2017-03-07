@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170304223432) do
+ActiveRecord::Schema.define(version: 20170307092528) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,6 +24,7 @@ ActiveRecord::Schema.define(version: 20170304223432) do
     t.boolean  "approved",       default: false
     t.decimal  "average_rating", default: "0.0"
     t.integer  "abv"
+    t.string   "brand"
   end
 
   create_table "ratings", force: :cascade do |t|
