@@ -36,5 +36,27 @@ RSpec.describe Api::V1::AuthenticationController, type: :controller do
         expect(JSON.parse(response.body)["errors"]).to eq "Invalid Credentials"
       end
     end
+
+    context "with an uppercase email" do
+      let(:first_name) { Faker::Name.first_name }
+      let(:last_name) { Faker::Name.last_name }
+      let(:email) { Faker::Internet.email }
+      let!(:user) { User.create(email: email,
+                                password: "password",
+                                first_name: first_name,
+                                last_name: last_name,
+                                approved: true) }
+
+      let(:params) { { credentials: { email: email.upcase,
+                                      password: "password" } } }
+
+      it "finds the email regardless of case" do
+        post :create, params: params, format: :json
+
+        expect(response.status).to eq 200
+        expect(JSON.parse(response.body)["email"]).to eq email
+        expect(JSON.parse(response.body)["password_digest"]).to be_present
+      end
+    end
   end
 end

@@ -1,5 +1,5 @@
 class Beer < ApplicationRecord
-  validates_presence_of :name, :beer_type
+  validates_presence_of :name, :beer_type, :brand
   validates_uniqueness_of :name
   has_many :user_beers
   has_many :users, through: :user_beers

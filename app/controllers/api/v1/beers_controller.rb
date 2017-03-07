@@ -24,10 +24,10 @@ module Api
 
         def find_or_initialize_beer
           beer = Beer.find_or_initialize_by(name: beer_params[:name].to_s.downcase,
-                                            beer_type: beer_params[:beer_type].to_s.downcase)
+                                            beer_type: beer_params[:beer_type].to_s.downcase,
+                                            brand: beer_params[:brand].to_s.downcase)
 
           beer.abv = beer_params[:abv] if beer_params[:abv].present? && beer.abv.nil?
-          beer.brand = beer_params[:brand] if beer_params[:brand].present? && beer.brand.nil?
           beer
         end
 

@@ -11,7 +11,10 @@ RSpec.describe Api::V1::RatingsController, type: :controller do
 
     context "with valid data" do
       let(:beer_name) { Faker::Name.name }
-      let(:beer) { user.beers.create(name: beer_name, beer_type: "ipa") }
+      let(:brand) { Faker::Name.name }
+      let(:beer) {
+        user.beers.create(name: beer_name, beer_type: "ipa", brand: brand)
+      }
 
       it "creates a rating object and updates the average_rating of a beer" do
         params = { rating: 3, beer_id: beer.id,
@@ -66,7 +69,8 @@ RSpec.describe Api::V1::RatingsController, type: :controller do
       context "when the user rates a new beer" do
         it "adds the beer to the user's profile if the beer does not already belong to the user" do
           name = Faker::Name.name
-          global_beer = Beer.create(name: name, beer_type: "ipa")
+          brand = Faker::Name.name
+          global_beer = Beer.create(name: name, beer_type: "ipa", brand: brand)
 
           params = { rating: 4, beer_id: global_beer.id,
                      token: user.password_digest }
@@ -85,7 +89,8 @@ RSpec.describe Api::V1::RatingsController, type: :controller do
     context "when the the user is not logged in" do
       it "tells the user to login or create an account" do
         name = Faker::Name.name
-        global_beer = Beer.create(name: name, beer_type: "ipa")
+        brand = Faker::Name.name
+        global_beer = Beer.create(name: name, beer_type: "ipa", brand: brand)
 
         params = { rating: 4, beer_id: global_beer.id, token: "" }
 

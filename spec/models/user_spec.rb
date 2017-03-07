@@ -56,13 +56,14 @@ RSpec.describe User, type: :model do
 
   it "has many beers" do
     name = Faker::Name.name
+    brand = Faker::Name.name
     user = User.create(email: email,
                        password: password,
                        first_name: Faker::Name.first_name,
                        last_name: Faker::Name.last_name)
 
-    user.beers.create(name: Faker::Name.name, beer_type: name)
-    user.beers.create(name: Faker::Name.name, beer_type: name)
+    user.beers.create(name: Faker::Name.name, beer_type: name, brand: brand)
+    user.beers.create(name: Faker::Name.name, beer_type: name, brand: brand)
     expect(user.beers.count).to eq 2
   end
 end

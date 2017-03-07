@@ -3,20 +3,26 @@ require 'rails_helper'
 RSpec.describe Beer, type: :model do
   let(:name) { Faker::Name.name }
   let(:type) { Faker::Name.name }
+  let(:brand) { Faker::Name.name }
 
   it "should validate the name" do
-    expect(Beer.new.valid?).to be false
-    expect(Beer.new(name: name, beer_type: type).valid?).to be true
+    expect(Beer.new(brand: brand, beer_type: type).valid?).to be false
+    expect(Beer.new(name: name, beer_type: type, brand: brand).valid?).to be true
   end
 
   it "should validate the presence of a type" do
-    expect(Beer.new(name: name).valid?).to be false
-    expect(Beer.new(name: name, beer_type: type).valid?).to be true
+    expect(Beer.new(name: name, brand: brand).valid?).to be false
+    expect(Beer.new(name: name, beer_type: type, brand: brand).valid?).to be true
+  end
+
+  it "should validate the presence of a brand" do
+    expect(Beer.new(name: name, beer_type: "ipa").valid?).to be false
+    expect(Beer.new(name: name, beer_type: type, brand: "avery").valid?).to be true
   end
 
   it "should validate the uniqueness of the name" do
-    beer1 = Beer.create(name: name, beer_type: type)
-    beer2 = Beer.new(name: name, beer_type: type)
+    beer1 = Beer.create(name: name, beer_type: type, brand: brand)
+    beer2 = Beer.new(name: name, beer_type: type, brand: brand)
     expect(beer2.valid?).to be false
   end
 
@@ -30,7 +36,7 @@ RSpec.describe Beer, type: :model do
     email2 = Faker::Internet.email
     password = Faker::Internet.password
 
-    beer = Beer.create(name: Faker::Name.name, beer_type: Faker::Name.name)
+    beer = Beer.create(name: name, beer_type: type, brand: brand)
     beer.users.create(email: email1,
                       password: password,
                       first_name: first_name,
@@ -49,6 +55,7 @@ RSpec.describe Beer, type: :model do
         5.times do
           Beer.create(name: Faker::Name.name,
                       beer_type: Faker::Name.name,
+                      brand: brand,
                       approved: true)
         end
       end
@@ -62,7 +69,10 @@ RSpec.describe Beer, type: :model do
       before do
         5.times do |n|
           type = "ipa" if n.even?
-          Beer.create(name: Faker::Name.name, beer_type: type, approved: true)
+          Beer.create(name: Faker::Name.name,
+                      beer_type: type,
+                      brand: brand,
+                      approved: true)
         end
       end
 
@@ -90,7 +100,7 @@ RSpec.describe Beer, type: :model do
 
   describe "check_text" do
     it "does a search on beers that have the matching characters in the text" do
-      beer = Beer.create(name: "jones", beer_type: "ipa")
+      beer = Beer.create(name: "jones", beer_type: "ipa", brand: brand)
       expect(Beer.check_text("one", Beer).last).to eq beer
     end
   end
@@ -117,7 +127,7 @@ RSpec.describe Beer, type: :model do
     before do
       5.times do |n|
         if n.even?
-          user.beers.create(name: Faker::Name.name, beer_type: "ipa")
+          user.beers.create(name: Faker::Name.name, beer_type: "ipa", brand: brand)
         end
       end
     end
@@ -139,10 +149,10 @@ RSpec.describe Beer, type: :model do
             name = n.to_s
           end
 
-          Beer.create(name: name, beer_type: "ipa")
+          Beer.create(name: name, beer_type: "ipa", brand: brand)
         end
         params = { page: 2 }
-        expect(Beer.calculate_offset(Beer, params).pluck(:name).first)
+        expect(Beer.calculate_offset(Beer, params).first.name)
           .to eq "first beer"
         expect(Beer.calculate_offset(Beer, params).pluck(:name).last)
           .to eq "last beer"

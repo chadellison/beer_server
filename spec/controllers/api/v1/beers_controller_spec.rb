@@ -8,7 +8,8 @@ RSpec.describe Api::V1::BeersController, type: :controller do
       it "returns all the beers in reverse order" do
         5.times do
           name = Faker::Name.name.downcase
-          Beer.create(name: name, beer_type: type, approved: true)
+          brand = Faker::Name.name.downcase
+          Beer.create(name: name, beer_type: type, approved: true, brand: brand)
         end
 
         get :index, params: { type: "all types" }, format: :json
@@ -26,7 +27,8 @@ RSpec.describe Api::V1::BeersController, type: :controller do
         5.times do |n|
           type = "ipa" if n.even?
           name = Faker::Name.name
-          Beer.create(name: name, beer_type: type, approved: true)
+          brand = Faker::Name.name
+          Beer.create(name: name, beer_type: type, approved: true, brand: brand)
         end
 
         params = { type: "ipa"}
@@ -45,9 +47,10 @@ RSpec.describe Api::V1::BeersController, type: :controller do
       it "returns all of the beers that include those characters" do
         5.times do |n|
           type = Faker::Name.name.downcase
+          brand = Faker::Name.name.downcase
           name = n.to_s
           name += "abc" if n.even?
-          Beer.create(name: name, beer_type: type, approved: true)
+          Beer.create(name: name, beer_type: type, approved: true, brand: brand)
         end
 
         params = { type: "all types", text: "abc"}
@@ -58,7 +61,8 @@ RSpec.describe Api::V1::BeersController, type: :controller do
 
         expect(response.status).to eq 200
         expect(parsed_response["beers"].count).to eq 3
-        expect(parsed_response["beers"].all? { |beer| beer["name"][1..-1] == "abc" }).to be true
+        expect(parsed_response["beers"]
+          .all? { |beer| beer["name"][1..-1] == "abc" }).to be true
       end
     end
   end
@@ -74,7 +78,12 @@ RSpec.describe Api::V1::BeersController, type: :controller do
     context "with a valid beer and valid user" do
       it "returns the beer and a 201 status" do
         beer_name = Faker::Name.name
-        params = { beer: { name: beer_name, beer_type: "ipa", rating: 3 },
+        brand = Faker::Name.name
+        params = { beer:
+                   { name: beer_name,
+                     beer_type: "ipa",
+                     rating: 3,
+                     brand: brand },
                    token: user.password_digest }
         expect { post :create, params: params, format: :json }
           .to change { Beer.count }.by(1)
@@ -86,7 +95,12 @@ RSpec.describe Api::V1::BeersController, type: :controller do
 
       it "associates the user with the beer" do
         beer_name = Faker::Name.name
-        params = { beer: { name: beer_name, beer_type: "ipa", rating: 3 },
+        brand= Faker::Name.name
+        params = { beer:
+                   { name: beer_name,
+                     beer_type: "ipa",
+                     rating: 3,
+                     brand: brand },
                    token: user.password_digest }
 
         expect { post :create, params: params, format: :json }
@@ -98,7 +112,12 @@ RSpec.describe Api::V1::BeersController, type: :controller do
       context "when the user has given a rating" do
         it "creates a rating" do
           beer_name = Faker::Name.name
-          params = { beer: { name: beer_name, beer_type: "ipa", rating: 3 },
+          brand = Faker::Name.name
+          params = { beer:
+                     { name: beer_name,
+                       beer_type: "ipa",
+                       rating: 3,
+                       brand: brand },
                      token: user.password_digest }
 
           expect { post :create, params: params, format: :json }
@@ -111,7 +130,12 @@ RSpec.describe Api::V1::BeersController, type: :controller do
       context "when no rating is given" do
         it "defaults to 0" do
           beer_name = Faker::Name.name
-          params = { beer: { name: beer_name, beer_type: "ipa", rating: "" },
+          brand = Faker::Name.name
+          params = { beer:
+                     { name: beer_name,
+                       beer_type: "ipa",
+                       rating: "",
+                       brand: brand },
                      token: user.password_digest }
 
           expect { post :create, params: params, format: :json }
@@ -126,7 +150,11 @@ RSpec.describe Api::V1::BeersController, type: :controller do
 
     context "witn no token" do
       it "returns an error" do
-        params = { beer: { name: Faker::Name.name, beer_type: "ipa" } }
+        params = { beer:
+                   { name: Faker::Name.name,
+                     beer_type: "ipa",
+                     brand: Faker::Name.name }
+                 }
 
         expect { post :create, params: params, format: :json }
           .to raise_exception(ActiveRecord::RecordNotFound)
@@ -134,13 +162,30 @@ RSpec.describe Api::V1::BeersController, type: :controller do
     end
 
     context "with an invalid beer creation" do
-      it "returns a 422 and an error message" do
-        params = { beer: { beer_type: "ipa" }, token: user.password_digest }
-        post :create, params: params, format: :json
+      context "when no name is given" do
+        it "returns a 422 and an error message" do
+          brand = Faker::Name.name
+          params = { beer: { beer_type: "ipa", brand: brand },
+                     token: user.password_digest }
 
-        expect(response.status).to eq 422
-        error = { name: ["can't be blank"] }
-        expect(JSON.parse(response.body).deep_symbolize_keys[:errors]).to eq error
+          post :create, params: params, format: :json
+
+          expect(response.status).to eq 422
+          error = { name: ["can't be blank"] }
+          expect(JSON.parse(response.body).deep_symbolize_keys[:errors]).to eq error
+        end
+      end
+
+      context "when no brand is given" do
+        it "returns a 422 and an error message" do
+          params = { beer: { name: Faker::Name.name, beer_type: "ipa" },
+                     token: user.password_digest }
+          post :create, params: params, format: :json
+
+          expect(response.status).to eq 422
+          error = { brand: ["can't be blank"] }
+          expect(JSON.parse(response.body).deep_symbolize_keys[:errors]).to eq error
+        end
       end
     end
   end
