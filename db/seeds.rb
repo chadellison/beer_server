@@ -5,10 +5,9 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
-types = []
-20.times do
-  types << Faker::Name.name.downcase
-end
+types = ["amber", "barley wine", "barrel aged", "belgian", "brown", "lager",
+          "pilsner", "porter", "red ale", "saison", "scotch", "sour", "stout",
+          "wheat", "ipa"]
 
 5.times do
   User.create(first_name: Faker::Name.first_name,
@@ -17,9 +16,16 @@ end
               password: Faker::Internet.password)
 end
 
+brand = []
+
+20.times do
+  brand << Faker::Name.name
+end
+
 5000.times do
   beer = Beer.create(name: Faker::Name.name.downcase,
                      beer_type: types.sample,
+                     brand: brand.sample,
                      approved: true)
 
   rating = Rating.find_or_initialize_by(user_id: User.all.sample.id,
