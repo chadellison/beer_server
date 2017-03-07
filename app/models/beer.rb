@@ -30,7 +30,7 @@ class Beer < ApplicationRecord
       elsif criterion == "rating"
         beers.order(average_rating: :desc)
       elsif criterion == "abv"
-        beers.order(average_rating: :desc)
+        beers.order(abv: :desc)
       end
     end
 
