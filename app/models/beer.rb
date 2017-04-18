@@ -5,7 +5,7 @@ class Beer < ApplicationRecord
   has_many :users, through: :user_beers
   has_many :ratings
 
-  scope :user, -> (beer, token = nil) do
+  scope :current_beers, -> (beer, token = nil) do
     if beer == "my beers"
       User.find_by(password_digest: token).beers
     else
