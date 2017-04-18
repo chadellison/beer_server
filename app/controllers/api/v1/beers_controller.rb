@@ -3,11 +3,10 @@ module Api
     class BeersController < Api::V1::BaseController
       before_action :authenticate_with_token, only: [:create]
       before_action :find_or_initialize_beer, only: [:create]
-      before_action :filter_beers, only: [:index]
       respond_to :json
 
       def index
-        respond_with beers: @filtered_beers
+        respond_with beers: filter_beers
       end
 
       def create
@@ -23,13 +22,13 @@ module Api
       private
 
       def filter_beers
-        @filtered_beers = Beer.current_beers(search_params[:current_beers],
-                                             search_params[:token])
-                              .beer_type(search_params[:type])
-                              .beer_name(search_params[:text])
-                              .sort_by_criterion(search_params[:sort])
-                              .current_page(search_params[:page])
-                              .beer_order
+        Beer.current_beers(search_params[:current_beers],
+                           search_params[:token])
+            .beer_type(search_params[:type])
+            .beer_name(search_params[:text])
+            .sort_by_criterion(search_params[:sort])
+            .current_page(search_params[:page])
+            .beer_order
       end
 
       def find_or_initialize_beer
