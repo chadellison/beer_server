@@ -145,10 +145,10 @@ RSpec.describe Beer, type: :model do
 
       context 'when text is passed in' do
         it 'returns only beers with the specified text in their name' do
-          text = Faker::Name.name.downcase[1..-2]
+          text = Faker::Name.name.downcase
 
           beer = Beer.create(name: text, beer_type: 'ipa', brand: brand)
-          expect(Beer.beer_name(text).last).to eq beer
+          expect(Beer.beer_name(text[1..-2]).last).to eq beer
         end
       end
     end

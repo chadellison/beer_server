@@ -18,7 +18,7 @@ class Beer < ApplicationRecord
   end
 
   scope :beer_name, -> (text) do
-    where("name LIKE ?", text.downcase) if text.present?
+    where("name LIKE ?", "%#{text.downcase}%") if text.present?
   end
 
   scope :sort_by_criterion, -> (criterion) do

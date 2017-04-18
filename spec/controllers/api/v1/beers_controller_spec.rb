@@ -13,7 +13,6 @@ RSpec.describe Api::V1::BeersController, type: :controller do
         end
 
         get :index, params: { type: "all types" }, format: :json
-
         expect(response.status).to eq 200
         parsed_response = JSON.parse(response.body)
         expect(parsed_response["beers"].count).to eq 5
