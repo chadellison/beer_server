@@ -41,6 +41,7 @@ GEM
     arel (7.1.4)
     ast (2.3.0)
     bcrypt (3.1.11)
+    brakeman (3.6.1)
     builder (3.2.3)
     coderay (1.1.1)
     concurrent-ruby (1.0.4)
@@ -184,6 +185,7 @@ PLATFORMS
 
 DEPENDENCIES
   bcrypt
+  brakeman
   faker
   figaro
   jquery-rails

@@ -16,6 +16,7 @@ group :development, :test do
   gem "rspec-rails"
   gem "faker"
   gem "pry-rails"
+  gem 'brakeman', require: false
 end
 
 group :development do

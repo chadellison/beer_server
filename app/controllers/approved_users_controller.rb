@@ -1,4 +1,6 @@
 class ApprovedUsersController < ActionController::Base
+  protect_from_forgery with: :exception
+
   def show
     @user = User.find_by(password_digest: params[:token])
     @user.update(approved: true)
