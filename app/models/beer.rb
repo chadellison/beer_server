@@ -8,19 +8,14 @@ class Beer < ApplicationRecord
 
   scope :current_beers, (lambda do |beer, token = nil|
     if beer == 'my beers'
-      User.find_by(password_digest: token).beers
+      Beer.joins(:users).where(users: { password_digest: token })
     else
       where(approved: true)
     end
   end)
 
-  scope :beer_type, (lambda do |type|
-    where(beer_type: type) unless ['all types', ''].include?(type)
-  end)
-
-  scope :beer_name, (lambda do |text|
-    where('name LIKE ?', "%#{text.downcase}%") if text.present?
-  end)
+  scope :beer_type, ->(type) { where(beer_type: type) }
+  scope :beer_name, ->(text) { where('name LIKE ?', "%#{text.downcase}%") }
 
   scope :sort_by_criterion, (lambda do |criterion|
     case criterion
@@ -30,11 +25,10 @@ class Beer < ApplicationRecord
     end
   end)
 
-  scope :current_page, (lambda do |page|
-    offset((page.to_i - 1) * 24) if page.present?
-  end)
+  scope :current_page, (->(page = 1, per_page = 24) { offset((page.to_i - 1) * per_page.to_i) })
 
-  scope :beer_order, (-> { order(updated_at: :desc).limit(24) })
+  scope :beer_order, (-> { order(updated_at: :desc) })
+  scope :beer_limit, (->(per_page) { limit(per_page) })
 
   def self.fetch_beer_types(params)
     current_beers(params[:current_beers], params[:token])

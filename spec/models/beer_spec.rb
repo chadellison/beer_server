@@ -101,21 +101,6 @@ RSpec.describe Beer, type: :model do
     end
 
     describe 'beer_type' do
-      context 'when no beer type is specified' do
-        before do
-          5.times do
-            Beer.create(name: Faker::Name.name,
-                        beer_type: Faker::Name.name,
-                        brand: brand,
-                        approved: true)
-          end
-        end
-
-        it 'returns all beers' do
-          expect(Beer.beer_type('').count).to eq 5
-        end
-      end
-
       context 'when a specific beer type is passed in' do
         before do
           5.times do |n|
@@ -205,7 +190,7 @@ RSpec.describe Beer, type: :model do
     end
 
     describe 'current_page' do
-      context 'when page two is passed in' do
+      context 'when page two and per_page 24 are passed in ' do
         it 'returns the next 24 beers starting on the 25th beer' do
           48.times do |n|
             name = if n == 24
@@ -219,7 +204,7 @@ RSpec.describe Beer, type: :model do
             Beer.create(name: name, beer_type: 'ipa', brand: brand)
           end
 
-          result = Beer.current_page('2')
+          result = Beer.current_page('2', '24')
 
           expect(result.first.name).to eq 'first beer'
           expect(result.pluck(:name).last).to eq 'last beer'
@@ -227,7 +212,7 @@ RSpec.describe Beer, type: :model do
         end
       end
 
-      context 'when a page is not passed in' do
+      context 'when neither a page nor per_page are not passed in' do
         it 'returns all 48 beers' do
           48.times do |n|
             name = if n == 0
@@ -241,7 +226,7 @@ RSpec.describe Beer, type: :model do
             Beer.create(name: name, beer_type: 'ipa', brand: brand)
           end
 
-          result = Beer.current_page(nil)
+          result = Beer.current_page(nil, nil)
           expect(result.first.name).to eq 'first beer'
           expect(result.last.name).to eq 'last beer'
           expect(result.count).to eq 48

@@ -14,21 +14,26 @@ module Api
           Rating.create_with_relationships(@user, @beer, beer_params[:rating])
           respond_with @beer, location: nil
         else
-          errors = { errors: @beer.errors }
-          respond_with errors, location: nil, status: 422
+          errors = @beer.errors.map { |key, value| "#{key} #{value}" }.join("\n")
+          render json: { errors: errors}, status: 422
         end
       end
 
       private
 
       def filter_beers
-        Beer.current_beers(search_params[:current_beers],
-                           search_params[:token])
-            .beer_type(search_params[:type])
-            .beer_name(search_params[:text])
-            .sort_by_criterion(search_params[:sort])
-            .current_page(search_params[:page])
-            .beer_order
+        relation = Beer.current_beers(search_params[:current_beers],
+                                      search_params[:token])
+        unless ['all types', ''].include?(search_params[:type])
+          relation = relation.beer_type(search_params[:type])
+        end
+        if search_params[:text].present?
+          relation = relation.beer_name(search_params[:text])
+        end
+        relation = relation.sort_by_criterion(search_params[:sort])
+        relation = relation.current_page(search_params[:page],
+                                         search_params[:per_page])
+        relation.beer_order.beer_limit(params[:per_page])
       end
 
       def find_or_initialize_beer
@@ -44,7 +49,7 @@ module Api
 
       def search_params
         params.permit(:type, :name, :text, :sort, :rating, :current_beers,
-                      :token, :page)
+                      :token, :page, :per_page)
       end
 
       def beer_params
