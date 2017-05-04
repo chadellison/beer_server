@@ -13,7 +13,6 @@ RSpec.describe Api::V1::BeersController, type: :controller do
         end
 
         get :index, params: { type: "all types" }, format: :json
-
         expect(response.status).to eq 200
         parsed_response = JSON.parse(response.body)
         expect(parsed_response["beers"].count).to eq 5
@@ -171,7 +170,7 @@ RSpec.describe Api::V1::BeersController, type: :controller do
           post :create, params: params, format: :json
 
           expect(response.status).to eq 422
-          error = { name: ["can't be blank"] }
+          error = "name can't be blank"
           expect(JSON.parse(response.body).deep_symbolize_keys[:errors]).to eq error
         end
       end
@@ -183,7 +182,7 @@ RSpec.describe Api::V1::BeersController, type: :controller do
           post :create, params: params, format: :json
 
           expect(response.status).to eq 422
-          error = { brand: ["can't be blank"] }
+          error = "brand can't be blank"
           expect(JSON.parse(response.body).deep_symbolize_keys[:errors]).to eq error
         end
       end

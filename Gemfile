@@ -10,11 +10,13 @@ gem "bcrypt"
 gem "figaro"
 gem 'jquery-ui-rails'
 gem "jquery-rails"
+gem 'rubocop', require: false
 
 group :development, :test do
   gem "rspec-rails"
   gem "faker"
   gem "pry-rails"
+  gem 'brakeman', require: false
 end
 
 group :development do

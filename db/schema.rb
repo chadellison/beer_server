@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170307092528) do
+ActiveRecord::Schema.define(version: 20170502173722) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -50,6 +50,7 @@ ActiveRecord::Schema.define(version: 20170307092528) do
     t.string   "first_name"
     t.string   "last_name"
     t.boolean  "approved",        default: false
+    t.index ["password_digest"], name: "index_users_on_password_digest", using: :btree
   end
 
 end

@@ -1,3 +1,4 @@
+# beer model
 class Beer < ApplicationRecord
   validates_presence_of :name, :beer_type, :brand
   validates_uniqueness_of :name
@@ -5,55 +6,34 @@ class Beer < ApplicationRecord
   has_many :users, through: :user_beers
   has_many :ratings
 
-  class << self
-    def search(params)
-      beers = scope_beers(params)
-      beers = beers.where(beer_type: params["type"]) unless ["all types", ""].include?(params["type"])
-      beers = check_text(params["text"], beers) if params["text"].present?
-      beers = sort_by(beers, params["sort"]) if params["sort"].present?
-      beers = calculate_offset(beers, params) if params[:page].present?
-      beers = beers.order(updated_at: :desc).limit(24)
-      beers
+  scope :current_beers, (lambda do |beer, token = nil|
+    if beer == 'my beers'
+      Beer.joins(:users).where(users: { password_digest: token })
+    else
+      where(approved: true)
     end
+  end)
 
-    def check_text(text, beers)
-      beers.where("name LIKE ?", "%#{text.downcase}%")
+  scope :beer_type, ->(type) { where(beer_type: type) }
+  scope :beer_name, ->(text) { where('name LIKE ?', "%#{text.downcase}%") }
+
+  scope :sort_by_criterion, (lambda do |criterion|
+    case criterion
+    when 'name' then order(:name)
+    when 'rating' then order(average_rating: :desc)
+    when 'abv' then order(abv: :desc)
     end
+  end)
 
-    def scope_to_user(token)
-      User.find_by(password_digest: token).beers
-    end
+  scope :current_page, (->(page = 1, per_page = 24) { offset((page.to_i - 1) * per_page.to_i) })
 
-    def sort_by(beers, criterion)
-      if criterion == "name"
-        beers.order(:name)
-      elsif criterion == "rating"
-        beers.order(average_rating: :desc)
-      elsif criterion == "abv"
-        beers.order(abv: :desc)
-      end
-    end
+  scope :beer_order, (-> { order(updated_at: :desc) })
+  scope :beer_limit, (->(per_page) { limit(per_page) })
 
-    def fetch_beer_types(params)
-      scope_beers(params)
-        .select(:beer_type)
-        .distinct.pluck(:beer_type)
-        .unshift("all types")
-    end
-
-    def calculate_offset(beers, params)
-      offset = (params[:page].to_i - 1) * 24
-      beers.offset(offset)
-    end
-
-    private
-
-      def scope_beers(params)
-        if params["current_beers"] == "my beers"
-          scope_to_user(params[:token])
-        else
-          Beer.where(approved: true)
-        end
-      end
+  def self.fetch_beer_types(params)
+    current_beers(params[:current_beers], params[:token])
+      .select(:beer_type)
+      .distinct.pluck(:beer_type)
+      .unshift('all types')
   end
 end
